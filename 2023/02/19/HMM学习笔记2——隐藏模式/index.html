@@ -20,19 +20,22 @@
     var CONFIG = {"hostname":"cfrfree.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="寒假学习了Python中结巴分词的算法，在这里简单记录一下存在登录词时的结巴分词原理。">
+  <meta name="description" content="在笔记1中我们曾说预测天气的马尔可夫过程因为忽略了隐藏信息而是不准确的，现在我们将加入对隐藏信息的考虑。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="分词算法学习笔记1">
-<meta property="og:url" content="https://cfrfree.github.io/2023/02/18/%E5%88%86%E8%AF%8D%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/index.html">
+<meta property="og:title" content="HMM学习笔记2——隐藏模式">
+<meta property="og:url" content="https://cfrfree.github.io/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94%E9%9A%90%E8%97%8F%E6%A8%A1%E5%BC%8F/index.html">
 <meta property="og:site_name" content="FREE&#39;s blog">
-<meta property="og:description" content="寒假学习了Python中结巴分词的算法，在这里简单记录一下存在登录词时的结巴分词原理。">
+<meta property="og:description" content="在笔记1中我们曾说预测天气的马尔可夫过程因为忽略了隐藏信息而是不准确的，现在我们将加入对隐藏信息的考虑。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-02-18T14:11:44.000Z">
-<meta property="article:modified_time" content="2023-02-18T15:22:59.512Z">
+<meta property="og:image" content="https://cfrfree.github.io/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94%E9%9A%90%E8%97%8F%E6%A8%A1%E5%BC%8F/hidden-weather-example.gif">
+<meta property="og:image" content="https://cfrfree.github.io/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94%E9%9A%90%E8%97%8F%E6%A8%A1%E5%BC%8F/weather-b-matrix.gif">
+<meta property="article:published_time" content="2023-02-19T04:19:08.000Z">
+<meta property="article:modified_time" content="2023-02-19T04:38:49.764Z">
 <meta property="article:author" content="FREE">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cfrfree.github.io/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94%E9%9A%90%E8%97%8F%E6%A8%A1%E5%BC%8F/hidden-weather-example.gif">
 
-<link rel="canonical" href="https://cfrfree.github.io/2023/02/18/%E5%88%86%E8%AF%8D%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/">
+<link rel="canonical" href="https://cfrfree.github.io/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94%E9%9A%90%E8%97%8F%E6%A8%A1%E5%BC%8F/">
 
 
 <script id="page-configurations">
@@ -45,7 +48,7 @@
   };
 </script>
 
-  <title>分词算法学习笔记1 | FREE's blog</title>
+  <title>HMM学习笔记2——隐藏模式 | FREE's blog</title>
   
 
 
@@ -160,7 +163,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://cfrfree.github.io/2023/02/18/%E5%88%86%E8%AF%8D%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/">
+    <link itemprop="mainEntityOfPage" href="https://cfrfree.github.io/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94%E9%9A%90%E8%97%8F%E6%A8%A1%E5%BC%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/violet.jpg">
@@ -173,7 +176,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          分词算法学习笔记1
+          HMM学习笔记2——隐藏模式
         </h1>
 
         <div class="post-meta">
@@ -184,7 +187,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2023-02-18 22:11:44 / 修改时间：23:22:59" itemprop="dateCreated datePublished" datetime="2023-02-18T22:11:44+08:00">2023-02-18</time>
+              <time title="创建时间：2023-02-19 12:19:08 / 修改时间：12:38:49" itemprop="dateCreated datePublished" datetime="2023-02-19T12:19:08+08:00">2023-02-19</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -192,12 +195,12 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
+                  <a href="/categories/HMM/" itemprop="url" rel="index"><span itemprop="name">HMM</span></a>
                 </span>
             </span>
 
           
-            <div class="post-description">寒假学习了Python中结巴分词的算法，在这里简单记录一下存在登录词时的结巴分词原理。</div>
+            <div class="post-description">在笔记1中我们曾说预测天气的马尔可夫过程因为忽略了隐藏信息而是不准确的，现在我们将加入对隐藏信息的考虑。</div>
 
         </div>
       </header>
@@ -208,22 +211,30 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="流程概述"><a href="#流程概述" class="headerlink" title="流程概述"></a>流程概述</h2><ol>
-<li>根据已有的登陆词信息构建登陆词前缀Trie树</li>
-<li>对于每一个即将要分词的句子按照前缀Trie树上的信息建一张有向无环图</li>
-<li>在有向无环图上跑DP得到最大概率路径</li>
-<li>按照最大概率路径进行划分</li>
+        <h2 id="隐藏模式"><a href="#隐藏模式" class="headerlink" title="隐藏模式"></a>隐藏模式</h2><ol>
+<li><p><strong>马尔可夫模型的局限性：</strong></p>
+<p> 我们发现，马尔可夫模型仅仅依靠以前的状态进行预测，却忽视了许多关键的隐藏信息，很多时候观测到的状态序列与隐藏过程有一定的概率关系。</p>
+<p> 接下来我们使用隐马尔科夫模型对这样的过程建模，这个模型包含了一个底层隐藏的随时间改变的马尔科夫过程，以及一个与隐藏状态某种程度相关的可观察到的状态集合。</p>
+</li>
+<li><p><strong>隐马尔科夫模型（Hidden Markov Models）：</strong></p>
+<p> 下图显示的是天气例子中的隐藏状态和观察状态。假设隐藏状态（实际的天气）由一个简单的一阶马尔科夫过程描述，那么它们之间都相互连接。</p>
+ <img src="/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94%E9%9A%90%E8%97%8F%E6%A8%A1%E5%BC%8F/hidden-weather-example.gif" alt="hidden-weather-example" style="zoom:67%;">
+
+<p> 这里不难发现某个观察状态指向的的所有隐藏状态的概率之和为$1$，即$P(Obs|Sum)+P(Obs|Cloud)+P(Obs|Rain)&#x3D;1$。</p>
+<p> 除了定义了马尔科夫过程的概率关系，我们还有另一个矩阵，定义为混淆矩阵（confusion matrix），它包含了给定一个隐藏状态后得到的观察状态的概率。对于天气例子，混淆矩阵是：</p>
+<p> <img src="/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94%E9%9A%90%E8%97%8F%E6%A8%A1%E5%BC%8F/weather-b-matrix.gif" alt="weather-b-matrix"></p>
+<p> 注意这里每一行之和也是$1$。</p>
+</li>
 </ol>
-<h2 id="一、根据已有的登陆词信息构建登陆词前缀Trie树"><a href="#一、根据已有的登陆词信息构建登陆词前缀Trie树" class="headerlink" title="一、根据已有的登陆词信息构建登陆词前缀Trie树"></a>一、根据已有的登陆词信息构建登陆词前缀Trie树</h2><p>登录词以（词语，频数，词性）的方式存储在dict.txt中，比如（苏州大学，23，nt），本篇博客中我们只需要使用前两者。</p>
-<p>Trie树是一种基础的数据结构，这里就不过多赘述了。</p>
-<p>以“苏州大学”这个词为例，我们需要遍历其所有前缀得到“苏”，“苏州”，“苏州大”，“苏州大学”并在Trie上记录对应的频数（没有就是0）。值得注意的是，此时我们构建的Trie树并不是像平常一样使用结构体保存，而是十分地暴力地放到一个字典中，据说可以提高程序效率。这种做法从时空复杂度角度考虑无疑是不正确的，但考虑到汉字登录词长度一般较小，所以尚在可以接受的范围之内。</p>
-<p>在建树的同时，我们记录所有登录词的频数之和，这样每个登录词的出现频率也就是其出现频数除以这个频数之和。</p>
-<h2 id="二、对每个句子建有向无环图"><a href="#二、对每个句子建有向无环图" class="headerlink" title="二、对每个句子建有向无环图"></a>二、对每个句子建有向无环图</h2><p>对于需要我们进行分词的句子，我们可以根据Trie树中的信息对频数大于0的所有子串建一条权值等于频数的有向边，这样我们在下面进行DP的时候就可以不考虑后效性了（类似于先缩点再拓扑排序最后DP的套路）。</p>
-<p>以“苏州大学”为例，我们会从“苏”节点分别向“州”和“学”两个节点以及从“大”节点到“学”节点建边。</p>
-<h2 id="三、在DAG上使用动态规划求最大概率路径"><a href="#三、在DAG上使用动态规划求最大概率路径" class="headerlink" title="三、在DAG上使用动态规划求最大概率路径"></a>三、在DAG上使用动态规划求最大概率路径</h2><p>我们使用$DP[i]$表示从第$i$位汉字到末尾这样一个子串的最大划分概率，那么对于所有能到达$i$点的点$j$来说，如果$j$到$i$这条边的权重为$w$，那么$DP[j]&#x3D;\max(DP[j], DP[i]\times w)$，同时记录下$j$是从哪个点转移的。</p>
-<p>注意到这种朴素的求法会进行很多次浮点数相乘，为了防止溢出我们对所有数值取对数，以加减操作代替乘除操作。</p>
-<p>这样我们便可以依据转移过程对原句子进行分词了！</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>没想到分词算法竟然如此的简单巧妙，但有人会问如果不存在给定的登录词字典该怎么办，这个问题将在下一篇文章中进行解释。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我们使用一个隐马尔科夫模型（HMM）对上文类似的例子建模。这个模型包含两组状态集合和三组概率集合：</p>
+<ol>
+<li>隐藏状态：一个系统的（真实）状态，可以由一个马尔科夫过程进行描述（例如，天气）。</li>
+<li>观察状态：在这个过程中‘可视’的状态（例如，海藻的湿度）。</li>
+<li>$p_i$向量：包含了（隐）模型在时间$t&#x3D;1$时一个特殊的隐藏状态的概率（初始概率）。</li>
+<li>状态转移矩阵：包含了一个隐藏状态到另一个隐藏状态的概率</li>
+<li>混淆矩阵：包含了给定隐马尔科夫模型的某一个特殊的隐藏状态，观察到的某个观察状态的概率。</li>
+</ol>
+<p>因此一个隐马尔科夫模型是在一个标准的马尔科夫过程中引入一组观察状态，以及其与隐藏状态间的一些概率关系。</p>
 
     </div>
 
@@ -238,10 +249,13 @@
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%94%9F%E6%88%90%E6%A8%A1%E5%BC%8F/" rel="next" title="HMM学习笔记1——生成模式">
-      HMM学习笔记1——生成模式 <i class="fa fa-chevron-right"></i>
+    <a href="/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%94%9F%E6%88%90%E6%A8%A1%E5%BC%8F/" rel="prev" title="HMM学习笔记1——生成模式">
+      <i class="fa fa-chevron-left"></i> HMM学习笔记1——生成模式
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/02/19/HHM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B03%E2%80%94%E2%80%94%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B/" rel="next" title="HHM学习笔记3——隐马尔可夫模型">
+      HHM学习笔记3——隐马尔可夫模型 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -301,7 +315,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">流程概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%A0%B9%E6%8D%AE%E5%B7%B2%E6%9C%89%E7%9A%84%E7%99%BB%E9%99%86%E8%AF%8D%E4%BF%A1%E6%81%AF%E6%9E%84%E5%BB%BA%E7%99%BB%E9%99%86%E8%AF%8D%E5%89%8D%E7%BC%80Trie%E6%A0%91"><span class="nav-number">2.</span> <span class="nav-text">一、根据已有的登陆词信息构建登陆词前缀Trie树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%AF%B9%E6%AF%8F%E4%B8%AA%E5%8F%A5%E5%AD%90%E5%BB%BA%E6%9C%89%E5%90%91%E6%97%A0%E7%8E%AF%E5%9B%BE"><span class="nav-number">3.</span> <span class="nav-text">二、对每个句子建有向无环图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%9C%A8DAG%E4%B8%8A%E4%BD%BF%E7%94%A8%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B1%82%E6%9C%80%E5%A4%A7%E6%A6%82%E7%8E%87%E8%B7%AF%E5%BE%84"><span class="nav-number">4.</span> <span class="nav-text">三、在DAG上使用动态规划求最大概率路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%90%E8%97%8F%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">隐藏模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
