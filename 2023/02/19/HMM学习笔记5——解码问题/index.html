@@ -20,21 +20,19 @@
     var CONFIG = {"hostname":"cfrfree.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="评估问题是HMM常见的三大问题之一，通常使用前向算法和后向算法解决。">
+  <meta name="description" content="对于解码问题，我们常使用Viterbi算法解决，其一大应用便是对于无登录词情况下的句子分词">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HMM学习笔记4——评估问题">
-<meta property="og:url" content="https://cfrfree.github.io/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B04%E2%80%94%E2%80%94%E8%AF%84%E4%BC%B0%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:title" content="HMM学习笔记5——解码问题">
+<meta property="og:url" content="https://cfrfree.github.io/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B05%E2%80%94%E2%80%94%E8%A7%A3%E7%A0%81%E9%97%AE%E9%A2%98/index.html">
 <meta property="og:site_name" content="FREE&#39;s blog">
-<meta property="og:description" content="评估问题是HMM常见的三大问题之一，通常使用前向算法和后向算法解决。">
+<meta property="og:description" content="对于解码问题，我们常使用Viterbi算法解决，其一大应用便是对于无登录词情况下的句子分词">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cfrfree.github.io/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B04%E2%80%94%E2%80%94%E8%AF%84%E4%BC%B0%E9%97%AE%E9%A2%98/trellis.gif">
-<meta property="article:published_time" content="2023-02-19T06:31:51.000Z">
-<meta property="article:modified_time" content="2023-02-19T08:21:48.811Z">
+<meta property="article:published_time" content="2023-02-19T08:22:29.000Z">
+<meta property="article:modified_time" content="2023-02-19T09:28:48.188Z">
 <meta property="article:author" content="FREE">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cfrfree.github.io/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B04%E2%80%94%E2%80%94%E8%AF%84%E4%BC%B0%E9%97%AE%E9%A2%98/trellis.gif">
 
-<link rel="canonical" href="https://cfrfree.github.io/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B04%E2%80%94%E2%80%94%E8%AF%84%E4%BC%B0%E9%97%AE%E9%A2%98/">
+<link rel="canonical" href="https://cfrfree.github.io/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B05%E2%80%94%E2%80%94%E8%A7%A3%E7%A0%81%E9%97%AE%E9%A2%98/">
 
 
 <script id="page-configurations">
@@ -47,7 +45,7 @@
   };
 </script>
 
-  <title>HMM学习笔记4——评估问题 | FREE's blog</title>
+  <title>HMM学习笔记5——解码问题 | FREE's blog</title>
   
 
 
@@ -162,7 +160,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://cfrfree.github.io/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B04%E2%80%94%E2%80%94%E8%AF%84%E4%BC%B0%E9%97%AE%E9%A2%98/">
+    <link itemprop="mainEntityOfPage" href="https://cfrfree.github.io/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B05%E2%80%94%E2%80%94%E8%A7%A3%E7%A0%81%E9%97%AE%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/violet.jpg">
@@ -175,7 +173,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          HMM学习笔记4——评估问题
+          HMM学习笔记5——解码问题
         </h1>
 
         <div class="post-meta">
@@ -186,7 +184,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2023-02-19 14:31:51 / 修改时间：16:21:48" itemprop="dateCreated datePublished" datetime="2023-02-19T14:31:51+08:00">2023-02-19</time>
+              <time title="创建时间：2023-02-19 16:22:29 / 修改时间：17:28:48" itemprop="dateCreated datePublished" datetime="2023-02-19T16:22:29+08:00">2023-02-19</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -199,7 +197,7 @@
             </span>
 
           
-            <div class="post-description">评估问题是HMM常见的三大问题之一，通常使用前向算法和后向算法解决。</div>
+            <div class="post-description">对于解码问题，我们常使用Viterbi算法解决，其一大应用便是对于无登录词情况下的句子分词</div>
 
         </div>
       </header>
@@ -210,30 +208,40 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>HMM中的评估问题通常为给定一个$\lambda&#x3D;(\pi,A,B)$，求得到某个指定的观测序列$V$的概率。</p>
-<p>这里我们不妨使用$T$代表观测序列$V$的长度。</p>
-<h2 id="方法一：暴力"><a href="#方法一：暴力" class="headerlink" title="方法一：暴力"></a>方法一：暴力</h2><p>鲁迅有言：暴力出奇迹。对于评估问题来说，我们穷举所有可能的隐藏序列，并计算每一种隐藏序列得到指定观测序列的概率，从而计算整个$\lambda$得到特定观测序列的概率。</p>
-<p>以下图为例：</p>
-<p><img src="/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B04%E2%80%94%E2%80%94%E8%AF%84%E4%BC%B0%E9%97%AE%E9%A2%98/trellis.gif" alt="网格"></p>
-<p>如果指定的观测序列为$\set{dry,damp,soggy}$，那么不难发现总共有$3^3&#x3D;27$种可能的状态序列，比如$\set{sunny,sunny,sunny},\set{sunny,sunny,cloudy}$等等，接下来我们对这27种可能的状态序列$Q$计算$P(V|Q_{i})$，那么$P(V|\lambda)&#x3D;\sum P(Q|\lambda)\times P(V|Q)$</p>
-<p>这种算法的问题是$O(TN^{T})$时间复杂度太高了，现实中很难在规定时间内求出。</p>
-<h2 id="方法二：前向算法"><a href="#方法二：前向算法" class="headerlink" title="方法二：前向算法"></a>方法二：前向算法</h2><p>我们曾说HMM有齐次性这一特性，这一点与DP所要求的状态无后效性相似，因此我们可以尝试使用DP来进行评估问题的求解，即前向算法。</p>
-<p>对于给定的$\lambda$，我们定义到时刻$t$时的观测序列为$\set{o_1,o_2,o_3\dots o_t}$（即给定观测序列的前$t$项）且当前状态为$q_i$的概率为前向概率$\alpha_t(i)$，记为$\alpha_t(i)&#x3D;P(\set{o_1,o_2,o_3\dots o_t},i_t&#x3D;q_i|\lambda)$。</p>
-<p>对于前向概率$\alpha$的计算我们可以按如下三步进行：</p>
-<ol>
-<li>计算初始值：$\alpha_1(i)&#x3D;\pi_ib_i(o_1),i\in[1,N]$</li>
-<li>递推计算：$\alpha_{t+1}(i)&#x3D;[\sum_{j&#x3D;1}^N \alpha_t(j)\times a_{ji}]b_i(o_{t+1})$，$t\in[1,T-1]$，其中$j$表示$t$时刻状态为$q_j$</li>
-<li>求最终结果：$P(O|\lambda)&#x3D;\sum_{i&#x3D;1}^{N} \alpha_T(i)$</li>
+        <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>给定$\lambda&#x3D;(\pi,A,B)$和观测序列，求状态序列。即寻找一个最能解释已知观测序列的状态序列。</p>
+<h2 id="Viterbi算法"><a href="#Viterbi算法" class="headerlink" title="Viterbi算法"></a>Viterbi算法</h2><p>很奇妙，Viterbi算法也是一种动态规划算法。</p>
+<h3 id="两个有点复杂的定义："><a href="#两个有点复杂的定义：" class="headerlink" title="两个有点复杂的定义："></a>两个有点复杂的定义：</h3><ol>
+<li><p>令$\delta_t(i)$为所有能在时刻$t$到达状态$q_i$的路径的符合观测序列的概率的最大值。</p>
+<p> 详细点说，这里的概率是对于一条能在时刻$t$到达状态$q_i$的路径，其观测序列正好满足给定观测序列的前$t$个的这个概率。</p>
+<p> 而$\delta_t(i)$指的是所有路径上述概率的最大值。</p>
+<p> 其存在递推公式：$\delta_{t+1}(i)&#x3D;b_i(o_{t+1})\times \max(\delta_t(j)\times a_{ji})$，$j\in[1,N]$。</p>
+<p> 即从时刻$t$在状态$q_j$转移到了时刻$t+1$在状态$q_i$，后面的$max$表示转移的概率，因为还需要满足在$t+1$时刻的观测结果符合所给序列，所以在前面乘上$b_i(o_{t+1})$</p>
+</li>
+<li><p>令$\psi_t(i)$表示$\delta_t(i)$是从$t-1$时刻的哪个状态转移过来的。</p>
+</li>
 </ol>
-<p>这个算法的时间复杂度为$O(TN^{2})$，在可接受范围内。</p>
-<h2 id="方法三：后向算法"><a href="#方法三：后向算法" class="headerlink" title="方法三：后向算法"></a>方法三：后向算法</h2><p>如果能理解前向算法的化那后向算法理解起来应该十分简单，其也是基于了动态规划的思想。</p>
-<p>我们定义后向概率为在时刻$t$，如果当前状态为$q_i$，则从时刻$t+1$到时刻$T$的预测序列为$\set{o_{t+1},o_{t+2},\dots,o_T}$的概率，即$\beta_t{i}&#x3D;P(\set{o_{t+1},o_{t+2},\dots,o_T}|i_t&#x3D;q_i,\lambda)$</p>
-<p>后向算法按如下三步进行：</p>
-<ol>
-<li>初始化后向概率：因为最后得到的是给定的观测序列，所以$\beta_T{(i)}&#x3D;1$，$i\in[1,N]$</li>
-<li>递推计算：$\beta_t(i)&#x3D;[\sum_{j&#x3D;1}^{N} \beta_{t+1}(j)\times a_{ij}]b_{j}(o_{t+1})$，$t\in[1,T-1]$</li>
-<li>求最终结果：$P(O|\lambda)&#x3D;\sum_{i&#x3D;1}^{N}\pi_{i}\times \beta_{1}(i)\times b_{i}(o_{1})$，最后乘$b_{i}(o_{1})$是因为$\beta_{1}(i)$这个概率是从第二项到最后一项都满足，没有包含第一项</li>
+<h3 id="Viterbi流程："><a href="#Viterbi流程：" class="headerlink" title="Viterbi流程："></a>Viterbi流程：</h3><ol>
+<li><p>初始化：</p>
+<p> $\delta_1(i)&#x3D;b_i(o_1)\times \pi_i$，$i\in[1,N]$</p>
+<p> $\psi_1(i)&#x3D;0$</p>
+</li>
+<li><p>递推计算：</p>
+<p> $\delta_{t+1}(i)&#x3D;b_i(o_{t+1})\times \max(\delta_t(j)\times a_{ji})$，$j\in[1,N],t\in[1,N-1]$</p>
+<p> $\psi_{t+1}(i)&#x3D;\arg\max(\delta_t(j)\times a_{ji})$，$\arg$表示满足条件的下标</p>
+</li>
+<li><p>得到终值：</p>
+<p> $P^*&#x3D;\max(\delta_T(i))$（如果只求路径的话$P^*$不太重要）</p>
+<p> $i_{T}^*&#x3D;\arg\max(\delta_T(i))$</p>
+</li>
+<li><p>根据终值回溯寻找答案路径：</p>
+<p> $i_t^*&#x3D;\psi_{t+1}(i_{t+1}^*)$，$t\in[1,T-1]$</p>
+</li>
 </ol>
+<p>最后，$I&#x3D;[i_1^*,i_2^*,\dots,i_T^*]$便是我们需要的最终答案，表示一个满足所给观测序列最有可能的状态序列。</p>
+<p>​    </p>
+<p>​    </p>
+<p>​    </p>
+<p>​    </p>
 
     </div>
 
@@ -249,13 +257,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B03%E2%80%94%E2%80%94%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B/" rel="prev" title="HHM学习笔记3——隐马尔可夫模型">
-      <i class="fa fa-chevron-left"></i> HHM学习笔记3——隐马尔可夫模型
+    <a href="/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B04%E2%80%94%E2%80%94%E8%AF%84%E4%BC%B0%E9%97%AE%E9%A2%98/" rel="prev" title="HMM学习笔记4——评估问题">
+      <i class="fa fa-chevron-left"></i> HMM学习笔记4——评估问题
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B05%E2%80%94%E2%80%94%E8%A7%A3%E7%A0%81%E9%97%AE%E9%A2%98/" rel="next" title="HMM学习笔记5——解码问题">
-      HMM学习笔记5——解码问题 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -314,7 +319,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E6%9A%B4%E5%8A%9B"><span class="nav-number">2.</span> <span class="nav-text">方法一：暴力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E5%89%8D%E5%90%91%E7%AE%97%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">方法二：前向算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%89%EF%BC%9A%E5%90%8E%E5%90%91%E7%AE%97%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">方法三：后向算法</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Viterbi%E7%AE%97%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">Viterbi算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E4%B8%AA%E6%9C%89%E7%82%B9%E5%A4%8D%E6%9D%82%E7%9A%84%E5%AE%9A%E4%B9%89%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">两个有点复杂的定义：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Viterbi%E6%B5%81%E7%A8%8B%EF%BC%9A"><span class="nav-number">2.2.</span> <span class="nav-text">Viterbi流程：</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
