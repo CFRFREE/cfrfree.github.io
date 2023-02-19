@@ -23,16 +23,16 @@
   <meta name="description" content="这一篇我们将介绍隐马尔可夫模型定义及三种类型的应用">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HHM学习笔记3——隐马尔可夫模型">
-<meta property="og:url" content="https://cfrfree.github.io/2023/02/19/HHM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B03%E2%80%94%E2%80%94%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:url" content="https://cfrfree.github.io/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B03%E2%80%94%E2%80%94%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B/index.html">
 <meta property="og:site_name" content="FREE&#39;s blog">
 <meta property="og:description" content="这一篇我们将介绍隐马尔可夫模型定义及三种类型的应用">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-02-19T05:54:20.000Z">
-<meta property="article:modified_time" content="2023-02-19T06:28:56.617Z">
+<meta property="article:modified_time" content="2023-02-19T08:14:27.877Z">
 <meta property="article:author" content="FREE">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://cfrfree.github.io/2023/02/19/HHM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B03%E2%80%94%E2%80%94%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B/">
+<link rel="canonical" href="https://cfrfree.github.io/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B03%E2%80%94%E2%80%94%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B/">
 
 
 <script id="page-configurations">
@@ -160,7 +160,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://cfrfree.github.io/2023/02/19/HHM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B03%E2%80%94%E2%80%94%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B/">
+    <link itemprop="mainEntityOfPage" href="https://cfrfree.github.io/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B03%E2%80%94%E2%80%94%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/violet.jpg">
@@ -184,7 +184,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2023-02-19 13:54:20 / 修改时间：14:28:56" itemprop="dateCreated datePublished" datetime="2023-02-19T13:54:20+08:00">2023-02-19</time>
+              <time title="创建时间：2023-02-19 13:54:20 / 修改时间：16:14:27" itemprop="dateCreated datePublished" datetime="2023-02-19T13:54:20+08:00">2023-02-19</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -192,7 +192,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/HHM/" itemprop="url" rel="index"><span itemprop="name">HHM</span></a>
+                  <a href="/categories/HMM/" itemprop="url" rel="index"><span itemprop="name">HMM</span></a>
                 </span>
             </span>
 
@@ -216,7 +216,7 @@
 <li>$B&#x3D;[b_{ik}],b_{ik}&#x3D;P(o_t&#x3D;v_k|i_t&#x3D;q_i)$代表观测概率矩阵，即任意时刻$t$，若当前状态为$q_i$则观测值$v_k$被观测到的概率，$i\in[1,N],k\in[1,M]$</li>
 <li>$\pi&#x3D;(\pi_{i}),\pi_{i}&#x3D;P(i_1&#x3D;q_1)$代表初始状态概率向量</li>
 </ul>
-<p>那么一个隐马尔可夫模型便可以用三元组$(\pi,A,B)$来表示。</p>
+<p>那么一个隐马尔可夫模型便可以用三元组$\lambda&#x3D;(\pi,A,B)$来表示。</p>
 <p>基于上文的描述，我们可以发现隐马尔可夫模型有如下特点：</p>
 <ul>
 <li><strong>齐次性</strong>：即时刻$t$的状态只依赖于$t-1$时的状态，与其他时刻的状态与观测无关。</li>
@@ -225,14 +225,14 @@
 <h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><p>一旦一个系统可以作为HMM被描述，就可以用来解决三个基本问题。</p>
 <ol>
 <li><p>评估（Evaluation）</p>
-<p> 给定许多HMM$(\pi,A,B)$，寻找最有可能得到某特定观测序列的模型。</p>
-<p> 换言之对某个HMM$(\pi,A,B)$，求产生特定观测序列的概率。</p>
+<p> 给定许多$\lambda&#x3D;(\pi,A,B)$，寻找最有可能得到某特定观测序列的模型。</p>
+<p> 换言之对某个$\lambda$，求产生特定观测序列的概率。</p>
 <p> 这个问题我们通常使用前向算法（forward algorithm）来解决。</p>
 </li>
 <li><p>解码（ Decoding）</p>
-<p> 给定HMM$(\pi,A,B)$和观测序列，求状态序列。</p>
+<p> 给定$\lambda&#x3D;(\pi,A,B)$和观测序列，求状态序列。</p>
 <p> 即寻找一个最能解释已知观测序列的状态序列。</p>
-<p> 我们使用Viterbi 算法（Viterbi algorithm）确定（搜索）已知观察序列及HMM下最可能的隐藏状态序列。</p>
+<p> 我们使用Viterbi 算法确定（搜索）已知观察序列及$\lambda$下最可能的隐藏状态序列。</p>
 </li>
 <li><p>学习（Learning）</p>
 <p> 给定一个观察序列，求隐马尔可夫模型。</p>
@@ -257,7 +257,10 @@
     <a href="/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94%E9%9A%90%E8%97%8F%E6%A8%A1%E5%BC%8F/" rel="prev" title="HMM学习笔记2——隐藏模式">
       <i class="fa fa-chevron-left"></i> HMM学习笔记2——隐藏模式
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B04%E2%80%94%E2%80%94%E8%AF%84%E4%BC%B0%E9%97%AE%E9%A2%98/" rel="next" title="HMM学习笔记4——评估问题">
+      HMM学习笔记4——评估问题 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -332,14 +335,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
   </nav>
