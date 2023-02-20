@@ -20,22 +20,19 @@
     var CONFIG = {"hostname":"cfrfree.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="学习分词算法时的递归学习：隐马尔可夫模型">
+  <meta name="description" content="费劲折腾好了，在这里记录一下过程以及注意点，万一以后又忘了QAQ">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HMM学习笔记1——生成模式">
-<meta property="og:url" content="https://cfrfree.github.io/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%94%9F%E6%88%90%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:title" content="wsl+vscode搭建Latex写作环境">
+<meta property="og:url" content="https://cfrfree.github.io/2023/02/20/wsl-vscode%E6%90%AD%E5%BB%BALatex%E5%86%99%E4%BD%9C%E7%8E%AF%E5%A2%83/index.html">
 <meta property="og:site_name" content="FREE&#39;s blog">
-<meta property="og:description" content="学习分词算法时的递归学习：隐马尔可夫模型">
+<meta property="og:description" content="费劲折腾好了，在这里记录一下过程以及注意点，万一以后又忘了QAQ">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cfrfree.github.io/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%94%9F%E6%88%90%E6%A8%A1%E5%BC%8F/hmm4.gif">
-<meta property="og:image" content="https://cfrfree.github.io/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%94%9F%E6%88%90%E6%A8%A1%E5%BC%8F/hmm5.gif">
-<meta property="article:published_time" content="2023-02-19T03:48:56.000Z">
-<meta property="article:modified_time" content="2023-02-19T04:18:34.485Z">
+<meta property="article:published_time" content="2023-02-20T07:53:35.000Z">
+<meta property="article:modified_time" content="2023-02-20T08:30:00.839Z">
 <meta property="article:author" content="FREE">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cfrfree.github.io/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%94%9F%E6%88%90%E6%A8%A1%E5%BC%8F/hmm4.gif">
 
-<link rel="canonical" href="https://cfrfree.github.io/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%94%9F%E6%88%90%E6%A8%A1%E5%BC%8F/">
+<link rel="canonical" href="https://cfrfree.github.io/2023/02/20/wsl-vscode%E6%90%AD%E5%BB%BALatex%E5%86%99%E4%BD%9C%E7%8E%AF%E5%A2%83/">
 
 
 <script id="page-configurations">
@@ -48,7 +45,7 @@
   };
 </script>
 
-  <title>HMM学习笔记1——生成模式 | FREE's blog</title>
+  <title>wsl+vscode搭建Latex写作环境 | FREE's blog</title>
   
 
 
@@ -163,7 +160,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://cfrfree.github.io/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%94%9F%E6%88%90%E6%A8%A1%E5%BC%8F/">
+    <link itemprop="mainEntityOfPage" href="https://cfrfree.github.io/2023/02/20/wsl-vscode%E6%90%AD%E5%BB%BALatex%E5%86%99%E4%BD%9C%E7%8E%AF%E5%A2%83/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/violet.jpg">
@@ -176,7 +173,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          HMM学习笔记1——生成模式
+          wsl+vscode搭建Latex写作环境
         </h1>
 
         <div class="post-meta">
@@ -187,7 +184,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2023-02-19 11:48:56 / 修改时间：12:18:34" itemprop="dateCreated datePublished" datetime="2023-02-19T11:48:56+08:00">2023-02-19</time>
+              <time title="创建时间：2023-02-20 15:53:35 / 修改时间：16:30:00" itemprop="dateCreated datePublished" datetime="2023-02-20T15:53:35+08:00">2023-02-20</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -195,12 +192,12 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/HMM/" itemprop="url" rel="index"><span itemprop="name">HMM</span></a>
+                  <a href="/categories/Latex/" itemprop="url" rel="index"><span itemprop="name">Latex</span></a>
                 </span>
             </span>
 
           
-            <div class="post-description">学习分词算法时的递归学习：隐马尔可夫模型</div>
+            <div class="post-description">费劲折腾好了，在这里记录一下过程以及注意点，万一以后又忘了QAQ</div>
 
         </div>
       </header>
@@ -211,30 +208,51 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="生成模式"><a href="#生成模式" class="headerlink" title="生成模式"></a>生成模式</h2><ol>
-<li><p><strong>确定性模式（Deterministic Patterns）</strong>：</p>
-<p> 比如红绿灯，如果现在是红灯那么下一个一定是绿灯，如果现在是绿灯那么下一个一定是黄灯，而如果现在是黄灯那么下一个一定是红灯。</p>
-<p> 不难发现这里每一个状态都只依赖前一个状态，那么该系统是确定性的。确定性系统相对比较容易理解和分析，因为状态间的转移是完全已知的。</p>
-</li>
-<li><p><strong>非确定性模式（Non-deterministic patterns）</strong>：</p>
-<p> 以天气为例，我们很难像上文确定性模型一样仅根据今天的天气来准确推测明天的天气，而马尔科夫假设则是假定今天的天气只能通过过去几天已知的天气情况有关，这个预测过程被称之为$n$阶马尔科夫模型，其中$n$是影响下一个状态选择的（前）$n$个状态。</p>
-<p> 当然我们发现这个假设是不切实际的，因为其没有考虑到很多隐藏的重要信息，比如风力风向气压等等。</p>
-<p> 对于有$M$个状态的一阶马尔科夫模型，共有$M^2$个状态转移，因为任何一个状态都有可能是所有状态的下一个转移状态。每一个状态转移都有一个概率值，称为状态转移概率——这是从一个状态转移到另一个状态的概率。所有的$M^2$个概率可以用一个状态转移矩阵表示。注意这些概率并不随时间变化而不同——这是一个非常重要（但常常不符合实际）的假设。</p>
-<p> 下面的状态转移矩阵显示的是天气例子中可能的状态转移概率：</p>
- <img src="/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%94%9F%E6%88%90%E6%A8%A1%E5%BC%8F/hmm4.gif" alt="hmm4" style="zoom: 67%;">
- 
-<p> 这个转移矩阵的意思是如果昨天是晴天，那么今天是晴天的概率为$0.5$，多云的概率为$0.375$，下雨的概率为$0.125$。</p>
-<p> 这个模型在初始化的时候我们需要定义一个初始的概率向量$p_i$比如：</p>
-<p> <img src="/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94%E7%94%9F%E6%88%90%E6%A8%A1%E5%BC%8F/hmm5.gif" alt="hmm5"></p>
-<p> 现在我们便可以定义一个一阶的马尔可夫过程如下：</p>
-<ol>
-<li>状态：三种天气</li>
-<li>$p_i$向量：表示初始状态</li>
-<li>状态转移矩阵</li>
-</ol>
-<p> 任何一个可以用这种方式描述的系统都是一个马尔科夫过程。</p>
-</li>
-</ol>
+        <h2 id="在WSL下进行Latex写作的优点"><a href="#在WSL下进行Latex写作的优点" class="headerlink" title="在WSL下进行Latex写作的优点"></a>在WSL下进行Latex写作的优点</h2><p>和在Windows系统下相比，Linux系统的文件读写速度更快，这能使Latex的编译速度明显提升，而在WSL下进行操作又免去了安装双系统或是VM虚拟机的麻烦，同时可以很便捷地与Windows互传文件，因此才有了本文带来的wsl+vscode搭建Latex写作环境教程。</p>
+<h2 id="WSL安装"><a href="#WSL安装" class="headerlink" title="WSL安装"></a>WSL安装</h2><p>WSL，准确来说是WSL2的安装难度不大，找篇博客一般都能解决，要注意的是不要把默认用户设成root，虽然方便一些但后续步骤会和网上的教程有不少出入。</p>
+<p>安装好后可以先进行国内软件源的替换，记得完成后更新和升级。</p>
+<h2 id="Latex安装"><a href="#Latex安装" class="headerlink" title="Latex安装"></a>Latex安装</h2><p>这里我们选择安装Texlive，建议在Windows环境下先下载ios镜像，再以挂载硬盘的方式安装到WSL中，而不是使用apt等工具一键安装（因为版本太老）或是在WSL下直接进行镜像下载（因为WSL下载速度比较慢）。</p>
+<p>下载好后先进行如下安装，以减少可能出现的字体问题：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install fontconfig</span><br><span class="line">sudo apt install ttf-mscorefonts-installer</span><br></pre></td></tr></table></figure>
+
+<p>之后将Windows系统中的iso文件挂载，这里我们以挂载到E盘为例，执行如下操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir /mnt/E</span><br><span class="line">sudo mount -t drvfs E: /mnt/E</span><br></pre></td></tr></table></figure>
+
+<p>如此我们便可以在WSL中进入下载好的iso文件当中，可以看到<code>install-lt</code>这个安装脚本，使用下面的操作运行，WSL系统便可以进行离线的Latex安装。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo /mnt/x/install-tl</span><br></pre></td></tr></table></figure>
+
+<p>接着屏幕会弹出一堆信息，默认安装的话点击<code>I</code>键就可以。</p>
+<p>安装完成后我们需要使用如下命令更新环境变量：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.bashrc</span><br></pre></td></tr></table></figure>
+
+<p>打开文件后在末尾添加如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export PATH=/usr/local/texlive/2022/bin/x86_64-linux:$PATH</span><br><span class="line">export MANPATH=/usr/local/texlive/2022/texmf-dist/doc/man:$MANPATH</span><br><span class="line">export INFOPATH=/usr/local/texlive/2022/texmf-dist/doc/info:$INFOPATH</span><br></pre></td></tr></table></figure>
+
+<p>这时我们保存并退出，输入<code>tex -v</code>就可以看到Latex的相关信息了。</p>
+<h2 id="字体问题处理"><a href="#字体问题处理" class="headerlink" title="字体问题处理"></a>字体问题处理</h2><p>安装完成后我们开始处理字体问题，先使用如下命令将配置文件复制到系统。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cp /usr/local/texlive/2022/texmf-var/fonts/conf/texlive-fontconfig.conf /etc/fonts/conf.d/09-texlive.conf</span><br></pre></td></tr></table></figure>
+
+<p>然后执行<code>sudo fc-cache -fsv</code>刷新字体缓存。</p>
+<p>如果之后编译中发现有字体文件找不到，字体名称以FandoKai为例，我们先在Windows寻找或下载好需要的字体文件，拷贝到<code>/usr/share/fonts/truetype/windows-font</code>下（这里的<code>windows-font</code>是按自己喜好新建的一个文件夹）</p>
+<p>之后使用<code>sudo chmod -R 777 /usr/share/fonts/truetype/windows-font</code>赋予文件权限。</p>
+<p>接着使用如下三条命令刷新系统的字体：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo mkfontscale</span><br><span class="line">sudo mkfontdir</span><br><span class="line">sudo fc-cache -fv</span><br></pre></td></tr></table></figure>
+
+<h2 id="Vscode的安装"><a href="#Vscode的安装" class="headerlink" title="Vscode的安装"></a>Vscode的安装</h2><p>在WSL中输入<code>code .</code>就可以安装并使用Vscode打开当前文件夹。</p>
+<p>接着我们在WSL中安装LaTeX Workshop差距，配置文件和Windows里一样，可以直接使用。</p>
+<p>如果需要编译的文件是从Windows里直接拷贝过来的，那么这个文件会被WSL认为是root用户创建的，从而导致Vscode无法进行操作，这时我们需要使用<code>sudo chmod -R 777 *</code>来调整文件权限。</p>
+<h2 id="Tlmbgr操作（可选）"><a href="#Tlmbgr操作（可选）" class="headerlink" title="Tlmbgr操作（可选）"></a>Tlmbgr操作（可选）</h2><p>Tlmbgr是一款Latex宏包管理软件，类似于pip。要想使用Tlmbgr，我们首先要进行如下操作</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo visudo</span><br></pre></td></tr></table></figure>
+
+<p>在打开的文件中找到<code>secure_path</code>，将<code>/usr/local/texlive/2022/bin/x86_64-linux:</code>复制到后面信息的最开头，然后分别按<code>Ctrl+x</code>，<code>y</code>，<code>Enter</code>进行保存。</p>
+<p>这时我们发现使用<code>sudo tlmger</code>命令不会显示什么错误了。</p>
+<p>接着我们使用下方命令选择一个距离较近的tlmbgr源：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo tlmgr option repository ctan</span><br></pre></td></tr></table></figure>
+
+<p>然后使用如下命令查看并更新所有宏包：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo tlmgr update --list</span><br><span class="line">sudo tlmgr update --self --all</span><br></pre></td></tr></table></figure>
+
+<p>速度可能比较慢，建议挂机去做点别的事。</p>
 
     </div>
 
@@ -250,13 +268,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/02/18/%E5%88%86%E8%AF%8D%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/" rel="prev" title="分词算法学习笔记1">
-      <i class="fa fa-chevron-left"></i> 分词算法学习笔记1
+    <a href="/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B05%E2%80%94%E2%80%94%E8%A7%A3%E7%A0%81%E9%97%AE%E9%A2%98/" rel="prev" title="HMM学习笔记5——解码问题">
+      <i class="fa fa-chevron-left"></i> HMM学习笔记5——解码问题
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2023/02/19/HMM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94%E9%9A%90%E8%97%8F%E6%A8%A1%E5%BC%8F/" rel="next" title="HMM学习笔记2——隐藏模式">
-      HMM学习笔记2——隐藏模式 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -315,7 +330,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">生成模式</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8WSL%E4%B8%8B%E8%BF%9B%E8%A1%8CLatex%E5%86%99%E4%BD%9C%E7%9A%84%E4%BC%98%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">在WSL下进行Latex写作的优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WSL%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">WSL安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Latex%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">Latex安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E4%BD%93%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">字体问题处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vscode%E7%9A%84%E5%AE%89%E8%A3%85"><span class="nav-number">5.</span> <span class="nav-text">Vscode的安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tlmbgr%E6%93%8D%E4%BD%9C%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="nav-number">6.</span> <span class="nav-text">Tlmbgr操作（可选）</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
