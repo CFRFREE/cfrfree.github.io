@@ -17,7 +17,7 @@ description: softmax回归是一种解决分类问题的常见回归模型
 softmax回归的计算方式如下：
 
 $$
-\hat{y}_i=\frac{\exp(o_i)}{\sum_{i=1}^3\exp(o_i)}
+\hat{y}\_i=\frac{\exp(o\_i)}{\sum_{i=1}^3 \exp(o\_i)}
 $$
 
 我们发现$\hat{y}_1 + \hat{y}_2 + \hat{y}_3 = 1$且$0 \leq \hat{y}_1, \hat{y}_2, \hat{y}_3 \leq 1$，因此$\hat{y}_1, \hat{y}_2, \hat{y}_3$是一个合法的概率分布，此外不难发现
