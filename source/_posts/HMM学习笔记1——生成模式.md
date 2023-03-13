@@ -2,7 +2,7 @@
 title: HMM学习笔记1——生成模式
 mathjax: true
 date: 2023-02-19 11:48:56
-categories: HMM
+categories: 机器学习
 description: 学习分词算法时的递归学习：隐马尔可夫模型
 ---
 

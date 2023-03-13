@@ -2,7 +2,7 @@
 title: HMM学习笔记2——隐藏模式
 mathjax: true
 date: 2023-02-19 12:19:08
-categories: HMM
+categories: 机器学习
 description: 在笔记1中我们曾说预测天气的马尔可夫过程因为忽略了隐藏信息而是不准确的，现在我们将加入对隐藏信息的考虑。
 ---
 

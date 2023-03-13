@@ -2,7 +2,7 @@
 title: HMM学习笔记4——评估问题
 mathjax: true
 date: 2023-02-19 14:31:51
-categories: HMM
+categories: 机器学习
 description: 评估问题是HMM常见的三大问题之一，通常使用前向算法和后向算法解决。
 ---
 

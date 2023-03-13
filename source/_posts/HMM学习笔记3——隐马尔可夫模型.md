@@ -2,7 +2,7 @@
 title: HHM学习笔记3——隐马尔可夫模型
 mathjax: true
 date: 2023-02-19 13:54:20
-categories: HMM
+categories: 机器学习
 description: 这一篇我们将介绍隐马尔可夫模型定义及三种类型的应用
 ---
 

@@ -2,7 +2,7 @@
 title: HMM学习笔记5——解码问题
 mathjax: true
 date: 2023-02-19 16:22:29
-categories: HMM
+categories: 机器学习
 description: 对于解码问题，我们常使用Viterbi算法解决，其一大应用便是对于无登录词情况下的句子分词
 ---
 
