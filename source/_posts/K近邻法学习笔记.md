@@ -1,4 +1,3 @@
-#! https://zhuanlan.zhihu.com/p/613607485
 ---
 title: K近邻法学习笔记
 mathjax: true
