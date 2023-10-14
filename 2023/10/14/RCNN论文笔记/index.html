@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"cfrfree.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="RCNN论文笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RCNN论文笔记">
+<meta property="og:url" content="https://cfrfree.github.io/2023/10/14/RCNN%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="FREE&#39;s blog">
+<meta property="og:description" content="RCNN论文笔记">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-10-14T05:07:08.000Z">
+<meta property="article:modified_time" content="2023-10-14T08:51:39.238Z">
+<meta property="article:author" content="FREE">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://cfrfree.github.io/2023/10/14/RCNN%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>RCNN论文笔记 | FREE's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">FREE's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://cfrfree.github.io/2023/10/14/RCNN%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/violet.jpg">
+      <meta itemprop="name" content="FREE">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FREE's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          RCNN论文笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-10-14 13:07:08 / 修改时间：16:51:39" itemprop="dateCreated datePublished" datetime="2023-10-14T13:07:08+08:00">2023-10-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BA%E6%96%87/" itemprop="url" rel="index"><span itemprop="name">论文</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">RCNN论文笔记</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="1、引言"><a href="#1、引言" class="headerlink" title="1、引言"></a>1、引言</h2><p>引言部分首先叙述了目标检测方向在近十年来的发展缓慢，然后从生物学的角度出发，认为对于目标的识别发生在神经链的下游，所以提出采用深度更深、隐藏层更丰富的网络来进行检测。接着作者简要介绍了CNN，其发明于20世纪90年代，然而因为SVM的出现及其在CV方向的不断应用，CNN一定程度上被淘汰了。2012年，Krizhevsky等人在ImageNet分类比赛中通过使用海量数据训练大型的CNN的方法取得了很好的效果，这重燃了人们对CNN的希望，并对其是否能在目标检测上创造同样佳绩产生了兴趣。本文则首次表明CNN在解决下列问题之后在PASCAL VOC数据集上取得了优异的成绩：</p>
+<ol>
+<li><p>利用深度学习对目标进行定位</p>
+<p> 与图像分类不同的是，目标检测需要对对图片中的目标进行定位。一种方法是把定位当作一个回归问题来处理，然而众多研究表明这种方法在实践中效果不佳。另一种选择是使用滑动窗口探测器，近二十年来的CNN目标识别都是使用这种方法，然而其受制于检测对象的类别（不同检测类别的窗口大小也不同）。本文则是对于图片先生成与类别无关的2000个待检测框，然后使用CNN对每个待检测框提取固定长度的特征向量，再使用若干个和类别相关的SVM进行分类。这也是本方法名字的由来：Regions with CNN features.</p>
+</li>
+<li><p>通过很少的标注数据训练出高效的模型</p>
+<p> 想要训练大型的CNN网络就需要海量的数据，然而现阶段缺乏标注好的目标检测数据集。常规的解决方案是先使用无监督的预训练，再进行有监督的微调。本文则是发现在有监督的数据集上进行预训练，然后进行有监督的微调效果良好。</p>
+</li>
+</ol>
+<p>RCNN除了准确度高之外，其还有着简单高效的特点。通过尝试我们发现，在切除了拥有超过5400万个（占总量的94%）参数的全连接层之后，网络的检测精度并没有显著的下降。同时，通过对网络中单元格进行测试，可以看到卷积层学习了不同且丰富的特征。不仅如此，在对误差进行分析之后，发现大多数的错误识别都是定位不准确造成的，对此本文又设计了一种简单的边界框回归（BBox-Regression）方法来提高定位精度。又因为RCNN是以区域为检测对象的，所以我们将其扩展到语义分割当中，发现其在PASCALVOC分割任务当中也取得了最先进的成果。</p>
+<h2 id="2、使用RCNN进行目标检测"><a href="#2、使用RCNN进行目标检测" class="headerlink" title="2、使用RCNN进行目标检测"></a>2、使用RCNN进行目标检测</h2><p>本文的目标检测系统由一下三个模块组成：待检测区域生成器、提取特征向量的CNN、进行分类的SVM组。</p>
+<h3 id="2-1、模块设计"><a href="#2-1、模块设计" class="headerlink" title="2.1、模块设计"></a>2.1、模块设计</h3><ol>
+<li><p>生成待检测区域</p>
+<p> 现有论文提出了许多生成与类别无关的待检测区域的方法，本文选择了Selective Search从而便于将RCNN的检测结果与先前的算法进行比较。</p>
+</li>
+<li><p>特征提取</p>
+<p> 我们的神经网络由五个卷积层和两个全连接层构成，其最后可以得到一个$4096$维的特征向量。在数据的预处理中，我们会将其缩放拉伸到$227\times277$，并在原始框周围增加宽度为$16$的Padding以保证边缘信息也能参与到卷积的信息计算当中。</p>
+</li>
+</ol>
+<h3 id="2-2、测试流程"><a href="#2-2、测试流程" class="headerlink" title="2.2、测试流程"></a>2.2、测试流程</h3><p>在对图片进行检测时，我们先使用Selective Search生成大约$2000$个待检测区域，在对每个区域通过CNN的前向传播得到特征向量，最后使用针对特定类别的SVM得到区域对于某个类别的评分。对于图像所有的待检测区域，我们使用基于贪心的Non-Maximum Suppression，如果某区域与有着较高评分区域的IoU超过特定阈值，那么我们将忽略该区域。</p>
+<p>因为一下两点，RCNN的测试十分高效：CNN的所有参数对于每个类别都是共享的，并且最后CNN得到的特征向量维数较先前算法相比更低。需要针对类别进行的计算只有在通过特征向量和SVM的点积（可以使用矩阵加速）计算评分以及Non-Maximum Suppression中，这使得RCNN可以推广到测试更多种类的任务中。</p>
+<h3 id="2-3、训练流程"><a href="#2-3、训练流程" class="headerlink" title="2.3、训练流程"></a>2.3、训练流程</h3><p>RCNN的训练由以下三个部分组成：</p>
+<ol>
+<li><p>在大型数据集上进行有监督的预训练</p>
+<p> 本文在ILSVRC 2012上分类别进行CNN的训练</p>
+</li>
+<li><p>在最终数据集进行微调</p>
+<p> 我们在CNN架构没有发生改变的基础上，使用SGD在最终的实际数据集上进行迭代。我们把与实际边框$\text{IoU}&gt;0.5$的样本当作正样本，反之则是负样本，在每一批次的训练中，我们把$32$个正样本和$96$个负样本组成一个Batch，以避免数据不平衡带来的影响。</p>
+</li>
+<li><p>训练特征分类器</p>
+<p> 在特征分类器的训练中，通过一系列的测试，我们把$\text{IoU}&gt;0.3$的当作正样本，其余为负样本</p>
+</li>
+</ol>
+<h3 id="2-4、结果"><a href="#2-4、结果" class="headerlink" title="2.4、结果"></a>2.4、结果</h3><p>在VOC2010-2012的数据集中，RCNN以及后来的改进版RCNN-BB在检测高效的基础上都取得了非常好的成绩。</p>
+<h2 id="3、可视化、消融以及错误分析"><a href="#3、可视化、消融以及错误分析" class="headerlink" title="3、可视化、消融以及错误分析"></a>3、可视化、消融以及错误分析</h2><h3 id="3-1、可视化学习到的特征"><a href="#3-1、可视化学习到的特征" class="headerlink" title="3.1、可视化学习到的特征"></a>3.1、可视化学习到的特征</h3><p>我们提出了一个简单的方法来验证某个神经网络的节点学习到了什么：将大约$1000$万个建议区域在该节点上的激活值进行排序，选取排名靠前的区域。经过测试我们发现卷积层似乎学习到了形状，纹理，颜色和材料的分类，而全连接层则学习了如何将这些要素组合建模。</p>
+<h3 id="3-2、消融研究"><a href="#3-2、消融研究" class="headerlink" title="3.2、消融研究"></a>3.2、消融研究</h3><p>为了探究哪些层对于检测较为重要，在不微调的情况下，我们发现$\text{fc}_7$的泛化效果不如$\text{fc}_6$，这表明我们在删掉$\text{fc}_7$（约$1680$万个参数，占总量的29%）后mAP甚至还会提高。不仅如此，如果把$\text{fc}_6$和$\text{fc}_7$这两个全连接层都删掉的话，也能得到不错的结果，这说明CNN大部分提取信息的能力都是依靠卷积层完成的。如果尝试微调，可以看到其使得模型的准确率提升了$8$个百分点，同时全连接层的准确度提升要比卷积层大得多，这说明预训练得到的卷积层模型是通用的。此外，我们还看到CNN的特征学习结果比现有的其他算法都要高。</p>
+<h3 id="3-3、错误分析"><a href="#3-3、错误分析" class="headerlink" title="3.3、错误分析"></a>3.3、错误分析</h3><p>通过分析错误检测的原因，我们发现大部分检测失败都是因为定位不准确造成的，为此我们提出了BBox Regression算法来优化定位，并发现其可以显著的减少因为定位不准造成的检测失败。</p>
+<h2 id="4、语义分割"><a href="#4、语义分割" class="headerlink" title="4、语义分割"></a>4、语义分割</h2><p>通过在VOC2011数据集上进行RCNN语义分割效果的测试，发现RCNN在高效的同时准确度超过所有现有算法。</p>
+<h2 id="5、结论"><a href="#5、结论" class="headerlink" title="5、结论"></a>5、结论</h2><p>本文提出的RCNN模型比VOC2012上的最佳结果相对提高了$30%$，并且认为“监督预训练+微调”将会是解决数据稀缺问题的方法。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/03/26/SVM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="prev" title="SVM学习笔记1">
+      <i class="fa fa-chevron-left"></i> SVM学习笔记1
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">1、引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E4%BD%BF%E7%94%A8RCNN%E8%BF%9B%E8%A1%8C%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B"><span class="nav-number">2.</span> <span class="nav-text">2、使用RCNN进行目标检测</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1%E3%80%81%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.1.</span> <span class="nav-text">2.1、模块设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2%E3%80%81%E6%B5%8B%E8%AF%95%E6%B5%81%E7%A8%8B"><span class="nav-number">2.2.</span> <span class="nav-text">2.2、测试流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3%E3%80%81%E8%AE%AD%E7%BB%83%E6%B5%81%E7%A8%8B"><span class="nav-number">2.3.</span> <span class="nav-text">2.3、训练流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4%E3%80%81%E7%BB%93%E6%9E%9C"><span class="nav-number">2.4.</span> <span class="nav-text">2.4、结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81%E5%8F%AF%E8%A7%86%E5%8C%96%E3%80%81%E6%B6%88%E8%9E%8D%E4%BB%A5%E5%8F%8A%E9%94%99%E8%AF%AF%E5%88%86%E6%9E%90"><span class="nav-number">3.</span> <span class="nav-text">3、可视化、消融以及错误分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1%E3%80%81%E5%8F%AF%E8%A7%86%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%88%B0%E7%9A%84%E7%89%B9%E5%BE%81"><span class="nav-number">3.1.</span> <span class="nav-text">3.1、可视化学习到的特征</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2%E3%80%81%E6%B6%88%E8%9E%8D%E7%A0%94%E7%A9%B6"><span class="nav-number">3.2.</span> <span class="nav-text">3.2、消融研究</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3%E3%80%81%E9%94%99%E8%AF%AF%E5%88%86%E6%9E%90"><span class="nav-number">3.3.</span> <span class="nav-text">3.3、错误分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E3%80%81%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2"><span class="nav-number">4.</span> <span class="nav-text">4、语义分割</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5%E3%80%81%E7%BB%93%E8%AE%BA"><span class="nav-number">5.</span> <span class="nav-text">5、结论</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="FREE"
+      src="/images/violet.jpg">
+  <p class="site-author-name" itemprop="name">FREE</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cfrfree" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;cfrfree" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chen_free@foxmail.com" title="E-Mail → mailto:chen_free@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">FREE</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
